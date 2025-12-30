@@ -1,25 +1,36 @@
 import { useState } from "react";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+const PUBLIC_BASE = import.meta.env.VITE_PUBLIC_BASE_URL;
+
 export default function App() {
   const [content, setContent] = useState("");
   const [expiresAt, setExpiresAt] = useState("");
   const [remainingViews, setRemainingViews] = useState("");
   const [pasteUrl, setPasteUrl] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setPasteUrl("");
+    setLoading(true);
 
     try {
-      const response = await fetch("/api/paste", {
+      const response = await fetch(`${API_BASE}/api/paste`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           content,
-          expires_at: expiresAt ? new Date(expiresAt).getTime() : undefined,
-          remaining_views: remainingViews ? Number(remainingViews) : undefined,
+          expires_at: expiresAt
+            ? new Date(expiresAt).getTime()
+            : undefined,
+          remaining_views: remainingViews
+            ? Number(remainingViews)
+            : undefined,
         }),
       });
 
@@ -27,60 +38,88 @@ export default function App() {
 
       if (!response.ok) {
         setError(data.error || "Something went wrong");
+        setLoading(false);
         return;
       }
 
-      setPasteUrl(`${process.env.PUBLIC_BASE_URL}/paste/${data.id}`);
+      setPasteUrl(`${PUBLIC_BASE}/paste/${data.id}`);
       setContent("");
       setExpiresAt("");
       setRemainingViews("");
     } catch (err) {
-      setError(err.message);
+      setError("Failed to connect to server");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div style={{ maxWidth: 600, margin: "50px auto", fontFamily: "sans-serif" }}>
+    <div
+      style={{
+        maxWidth: "600px",
+        margin: "50px auto",
+        fontFamily: "sans-serif",
+      }}
+    >
       <h1>Pastebin Lite</h1>
+
       <form onSubmit={handleSubmit}>
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="Enter your paste"
           rows={8}
-          style={{ width: "100%", padding: 10, marginBottom: 10 }}
+          style={{
+            width: "100%",
+            padding: "10px",
+            marginBottom: "10px",
+          }}
           required
         />
-        <div style={{ marginBottom: 10 }}>
+
+        <div style={{ marginBottom: "10px" }}>
           <input
             type="datetime-local"
             value={expiresAt}
             onChange={(e) => setExpiresAt(e.target.value)}
-            placeholder="Expires at (optional)"
             style={{ width: "48%", marginRight: "4%" }}
           />
+
           <input
             type="number"
+            min={1}
             value={remainingViews}
             onChange={(e) => setRemainingViews(e.target.value)}
-            placeholder="Remaining views (optional)"
+            placeholder="Views"
             style={{ width: "48%" }}
-            min={1}
           />
         </div>
-        <button type="submit" style={{ padding: "10px 20px" }}>
-          Create Paste
+
+        <button
+          type="submit"
+          disabled={loading}
+          style={{
+            padding: "10px 20px",
+            cursor: loading ? "not-allowed" : "pointer",
+          }}
+        >
+          {loading ? "Creating..." : "Create Paste"}
         </button>
       </form>
 
       {pasteUrl && (
-        <p style={{ marginTop: 20 }}>
-          Paste created! <a href={pasteUrl} target="_blank">{pasteUrl}</a>
+        <p style={{ marginTop: "20px" }}>
+           Paste created:{" "}
+          <a href={pasteUrl} target="_blank" rel="noreferrer">
+            {pasteUrl}
+          </a>
         </p>
       )}
 
       {error && (
-        <p style={{ marginTop: 20, color: "red" }}>{error}</p>
+        <p style={{ marginTop: "20px", color: "red" }}>
+          ❌ {error}
+        </p>
       )}
     </div>
   );

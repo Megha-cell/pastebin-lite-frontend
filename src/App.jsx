@@ -41,7 +41,7 @@ export default function App() {
       }
 
       // ✅ CORRECT paste view URL
-      setPasteUrl(`${API_BASE}/pastes/${data.id}`);
+      setPasteUrl(`${API_BASE}/p/${data.id}`);
       setContent("");
       setExpiresAt("");
       setRemainingViews("");

@@ -1,16 +1,68 @@
-# React + Vite
+# Pastebin-Lite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A small Pastebin-like application that allows users to create text pastes and share a URL to view them.  
+Supports optional time-based expiry (TTL) and view-count limits.
 
-Currently, two official plugins are available:
+Deployed on Vercel and designed to pass automated tests.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🚀 Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Frontend: React + Vite
+- Backend: Node.js + Express
+- Persistence: Redis (Upstash)
+- Deployment: Vercel
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## ✨ Features
+
+- Create a paste with arbitrary text
+- Generate a shareable URL
+- View pastes via API or HTML page
+- Optional constraints:
+  - Time-based expiry (TTL)
+  - View-count limit
+- Deterministic time support for testing (`TEST_MODE`)
+
+---
+
+## 🛠️ Running Locally
+
+### Prerequisites
+- Node.js (v18+ recommended)
+- Redis (local or Upstash)
+
+### Setup
+
+```bash
+git clone <repo-url>
+cd pastebin-lite
+npm install
+
+Start the app
+npm start
+
+🔌 API Routes
+Health Check
+GET /api/healthz
+
+Create Paste
+POST /api/pastes
+
+{
+  "content": "Hello world",
+  "ttl_seconds": 60,
+  "max_views": 5
+}
+
+Fetch Paste (API)
+GET /api/pastes/:id
+
+View Paste (HTML)
+GET /p/:id
+ Persistence Layer
+
+Redis (Upstash) is used to store paste content, expiry timestamps, and remaining view counts.
+This ensures data persists across requests in a serverless environment.

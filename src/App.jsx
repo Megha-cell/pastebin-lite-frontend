@@ -20,9 +20,7 @@ export default function App() {
     try {
       const response = await fetch(`${API_BASE}/api/pastes`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           content,
           expires_at: expiresAt
@@ -42,7 +40,8 @@ export default function App() {
         return;
       }
 
-      setPasteUrl(`${PUBLIC_BASE}/pastes/${data.id}`);
+      // ✅ CORRECT paste view URL
+      setPasteUrl(`${PUBLIC_BASE}/paste/${data.id}`);
       setContent("");
       setExpiresAt("");
       setRemainingViews("");
@@ -54,13 +53,7 @@ export default function App() {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: "600px",
-        margin: "50px auto",
-        fontFamily: "sans-serif",
-      }}
-    >
+    <div style={{ maxWidth: "600px", margin: "50px auto", fontFamily: "sans-serif" }}>
       <h1>Pastebin Lite</h1>
 
       <form onSubmit={handleSubmit}>
@@ -69,11 +62,7 @@ export default function App() {
           onChange={(e) => setContent(e.target.value)}
           placeholder="Enter your paste"
           rows={8}
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginBottom: "10px",
-          }}
+          style={{ width: "100%", padding: "10px", marginBottom: "10px" }}
           required
         />
 
@@ -98,10 +87,7 @@ export default function App() {
         <button
           type="submit"
           disabled={loading}
-          style={{
-            padding: "10px 20px",
-            cursor: loading ? "not-allowed" : "pointer",
-          }}
+          style={{ padding: "10px 20px", cursor: loading ? "not-allowed" : "pointer" }}
         >
           {loading ? "Creating..." : "Create Paste"}
         </button>
@@ -110,7 +96,7 @@ export default function App() {
       {pasteUrl && (
         <p style={{ marginTop: "20px" }}>
           Paste created:{" "}
-          <a href={`${API_BASE}/pastes/${data.id}`} target="_blank" rel="noreferrer">
+          <a href={pasteUrl} target="_blank" rel="noreferrer">
             {pasteUrl}
           </a>
         </p>

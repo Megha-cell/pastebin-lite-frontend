@@ -110,7 +110,7 @@ export default function App() {
       {pasteUrl && (
         <p style={{ marginTop: "20px" }}>
           Paste created:{" "}
-          <a href={pasteUrl} target="_blank" rel="noreferrer">
+          <a href={`${API_BASE}/pastes/${data.id}`} target="_blank" rel="noreferrer">
             {pasteUrl}
           </a>
         </p>

@@ -28,9 +28,10 @@ export default function App() {
           expires_at: expiresAt
             ? new Date(expiresAt).getTime()
             : undefined,
-          remaining_views: remainingViews
-            ? Number(remainingViews)
-            : undefined,
+          remaining_views:
+            remainingViews !== "" && Number(remainingViews) > 0
+              ? Number(remainingViews)
+              : undefined,
         }),
       });
 
@@ -38,7 +39,6 @@ export default function App() {
 
       if (!response.ok) {
         setError(data.error || "Something went wrong");
-        setLoading(false);
         return;
       }
 
@@ -46,7 +46,7 @@ export default function App() {
       setContent("");
       setExpiresAt("");
       setRemainingViews("");
-    } catch (err) {
+    } catch {
       setError("Failed to connect to server");
     } finally {
       setLoading(false);
@@ -90,7 +90,7 @@ export default function App() {
             min={1}
             value={remainingViews}
             onChange={(e) => setRemainingViews(e.target.value)}
-            placeholder="Views"
+            placeholder="Remaining views (optional)"
             style={{ width: "48%" }}
           />
         </div>
@@ -109,7 +109,7 @@ export default function App() {
 
       {pasteUrl && (
         <p style={{ marginTop: "20px" }}>
-           Paste created:{" "}
+          Paste created:{" "}
           <a href={pasteUrl} target="_blank" rel="noreferrer">
             {pasteUrl}
           </a>
@@ -118,7 +118,7 @@ export default function App() {
 
       {error && (
         <p style={{ marginTop: "20px", color: "red" }}>
-          ❌ {error}
+          {error}
         </p>
       )}
     </div>

@@ -42,7 +42,7 @@ export default function App() {
         return;
       }
 
-      setPasteUrl(`${PUBLIC_BASE}/paste/${data.id}`);
+      setPasteUrl(`${PUBLIC_BASE}/pastes/${data.id}`);
       setContent("");
       setExpiresAt("");
       setRemainingViews("");

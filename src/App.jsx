@@ -18,7 +18,7 @@ export default function App() {
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE}/api/paste`, {
+      const response = await fetch(`${API_BASE}/api/pastes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
